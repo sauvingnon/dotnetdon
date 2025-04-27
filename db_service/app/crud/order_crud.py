@@ -43,7 +43,7 @@ async def get_orders(user_id):
         except SQLAlchemyError as e:
             print(f"Ошибка: {e}")
 
-# Получение последнего заказа пользователя
+# Получение заказа 
 async def get_order(order_id):
     async with AsyncSessionLocal() as session:
         try:
