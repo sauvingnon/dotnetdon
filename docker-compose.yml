@@ -1,0 +1,51 @@
+services:
+  db:
+    image: postgres:17
+    container_name: postgres_db
+    restart: always
+    env_file:
+      - ./db_service/.env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      # - ./db_service/init:/docker-entrypoint-initdb.d запускаемый скрипт при первом развертывании
+    networks:
+      - internal
+    expose:
+      - 5432
+    ports:
+    - "5432:5432"
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"  # Открываем порт наружу, чтобы ты мог зайти в браузере
+    networks:
+      - internal
+
+  db_service:
+    build: ./db_service
+    container_name: db_service
+    restart: always
+    env_file:
+      - ./db_service/.env
+    depends_on:
+      - db
+    networks:
+      - internal
+    expose:
+      - 8000
+    command: uvicorn main:app --host 0.0.0.0 --port 8000
+    ports:
+      - "8000:8000"
+
+volumes:
+  postgres_data:
+
+networks:
+  internal:
+    driver: bridge
