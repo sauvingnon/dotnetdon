@@ -5,8 +5,6 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Теперь можешь обращаться к переменным окружения
-# URL_FOR_PANEL = os.getenv("URL_FOR_LOCAL")
-# URL_FOR_PANEL = os.getenv("URL_FOR_SERVER")
 URL_FOR_PANEL = os.getenv("URL_FOR_CONTAINER")
 URL_SUBSCRIPTION = os.getenv("URL_SUBSCRIPTION")
 PANEL_LOGIN = os.getenv("PANEL_LOGIN")
