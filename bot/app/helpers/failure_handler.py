@@ -1,4 +1,4 @@
-from app.helpers import notificate_admin
+from app.helpers.notificate_admin import notificate_admin
 from aiogram.types import Message, CallbackQuery
 
 # Метод для обработки ошибок

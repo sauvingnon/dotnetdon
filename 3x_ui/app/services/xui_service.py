@@ -2,21 +2,22 @@ import uuid
 from py3xui import Api, Client
 import config
 from httpx import HTTPError
+from app.models.client import Client as PClient
 
 # Настройки
 url = config.URL_FOR_PANEL
 username = config.PANEL_LOGIN
 password = config.PANEL_PASSWORD
 secret_key = config.PANEL_SECRET_KEY
-url_sub = config.URL_SUBSCRIPTION
-inboundId = 2
+url_sub_prefix = config.URL_SUBSCRIPTION
+inboundId = 1
 
 # Авторизация (пока статически на старте)
 api = Api(url, username, password, secret_key, use_tls_verify=False)
 # api = Api(url, username, password, use_tls_verify=False)
 api.login()
 
-async def add_new_client(tg_username: str) -> str | None:
+async def add_new_client(tg_username: str) -> PClient | None:
     id = str(uuid.uuid4())
     short_id = id.replace('-', '')[:10]
     sub_id = f"dotNetDon_VPN_{short_id}"
@@ -35,7 +36,20 @@ async def add_new_client(tg_username: str) -> str | None:
 
         api.client.add(inbound_id=inboundId, clients=[new_client])
 
-        return url_sub + new_client.sub_id
+        url_sub = url_sub_prefix + new_client.sub_id
+
+        new_p_client = PClient(
+            id=id,
+            email=email,
+            enable=True,
+            inboundId=inboundId,
+            flow="xtls-rprx-vision",
+            limitIp=1,
+            subId=sub_id,
+            url_sub=url_sub
+        )
+
+        return new_p_client
 
     except HTTPError as http_err:
         print(f"[add_new_client] HTTP ошибка при создании пользователя {tg_username}: {http_err}")

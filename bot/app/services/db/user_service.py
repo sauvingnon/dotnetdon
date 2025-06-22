@@ -1,12 +1,12 @@
 from app.services.db.client import client
 from typing import Optional, List
 from httpx import HTTPStatusError, ConnectTimeout, RequestError
-from app.services.db.pyndantic import to_pydantic_model, to_pydantic_models
-from app.models.user import User
+from app.models.pyndantic import to_pydantic_model, to_pydantic_models
+from app.models.db.user import User
 
 entity_schema = "users"
 
-async def create_user(tg_id: int, tg_username: str) -> dict:
+async def create_user(tg_id: int, tg_username: str, is_trial: bool = False) -> Optional[User]:
     """
     Создать нового пользователя.
     """
@@ -31,7 +31,7 @@ async def create_user(tg_id: int, tg_username: str) -> dict:
         print(f"Неизвестная ошибка: {e}")
         return None 
 
-async def get_user_for_tg_id(tg_id: int) -> Optional[dict]:
+async def get_user_for_tg_id(tg_id: int) -> Optional[User]:
     """
     Получить пользователя по его Telegram ID.
     """
@@ -58,7 +58,7 @@ async def get_user_for_tg_id(tg_id: int) -> Optional[dict]:
         print(f"Неизвестная ошибка: {e}")
         return None 
 
-async def get_user_for_user_id(user_id: int) -> Optional[dict]:
+async def get_user_for_user_id(user_id: int) -> Optional[User]:
     """
     Получить пользователя по внутреннему user_id.
     """
@@ -85,7 +85,7 @@ async def get_user_for_user_id(user_id: int) -> Optional[dict]:
         print(f"Неизвестная ошибка: {e}")
         return None 
 
-async def get_users() -> List[dict]:
+async def get_users() -> Optional[List[User]]:
     """
     Получить всех пользователей.
     """

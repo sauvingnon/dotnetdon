@@ -1,0 +1,42 @@
+# Byte-compiled / cache
+__pycache__/
+*.py[cod]
+*.pyo
+
+# VS Code settings
+.vscode/
+
+# Virtual environment
+venv/
+env/
+*.egg-info/
+
+# Docker files
+*.log
+*.pid
+*.sock
+
+# Environment variables
+.env
+
+# Pytest cache
+.pytest_cache/
+
+# MyPy, coverage, etc.
+.mypy_cache/
+.coverage
+htmlcov/
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Docker volumes
+volumes/
+
+**/__pycache__/
+**/build/
+**/dist/

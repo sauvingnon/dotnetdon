@@ -1,12 +1,12 @@
 from app.services.db.client import client
 from typing import Optional, List
 from httpx import HTTPStatusError, ConnectTimeout, RequestError
-from app.services.db.pyndantic import to_pydantic_model, to_pydantic_models
-from app.models.order import Order
+from app.models.pyndantic import to_pydantic_model, to_pydantic_models
+from app.models.db.order import Order
 
 entity_schema = "orders"
 
-async def create_order(user_id: int, platform: str, order_price: int, is_paid: bool) -> dict:
+async def create_order(user_id: int, platform: str, order_price: int, is_paid: bool) -> Optional[Order]:
     """
     Создать новый заказ.
     """
@@ -36,7 +36,7 @@ async def create_order(user_id: int, platform: str, order_price: int, is_paid: b
         print(f"Неизвестная ошибка: {e}")
         return None 
 
-async def get_orders(user_id: int) -> List[dict]:
+async def get_orders(user_id: int) -> Optional[List[Order]]:
     """
     Получить все заказы пользователя.
     """
@@ -61,7 +61,7 @@ async def get_orders(user_id: int) -> List[dict]:
         print(f"Неизвестная ошибка: {e}")
         return None 
 
-async def get_order(order_id: int) -> Optional[dict]:
+async def get_order(order_id: int) -> Optional[Order]:
     """
     Получить конкретный заказ по order_id.
     """

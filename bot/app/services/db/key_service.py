@@ -3,13 +3,13 @@
 from app.services.db.client import client
 from typing import Optional
 from httpx import HTTPStatusError, ConnectTimeout, RequestError
-from app.services.db.pyndantic import to_pydantic_model
-from app.models.key import Key
+from app.models.pyndantic import to_pydantic_model
+from app.models.db.key import Key
 
 entity_schema = "keys"
 
 # Функция получения ключа по order_id с обработкой ошибок
-async def get_key_for_order_id(order_id: int) -> Optional[dict]:
+async def get_key_for_order_id(order_id: int) -> Optional[Key]:
     """
     Получить ключ по order_id.
     """
@@ -43,7 +43,7 @@ async def get_key_for_order_id(order_id: int) -> Optional[dict]:
         print(f"Неизвестная ошибка: {e}")
         return None  # Возвращаем None в случае ошибки
 
-async def get_key_for_special_id(key_special_id: int) -> Optional[dict]:
+async def get_key_for_special_id(key_special_id: int) -> Optional[Key]:
     """
     Получить ключ по специальному идентификатору.
     """
@@ -68,7 +68,7 @@ async def get_key_for_special_id(key_special_id: int) -> Optional[dict]:
         print(f"Неизвестная ошибка: {e}")
         return None 
 
-async def create_key(key_content: str, user_id: int, order_id: int) -> dict:
+async def create_key(key_content: str, user_id: int, order_id: int) -> Optional[Key]:
     """
     Создать новый ключ.
     """

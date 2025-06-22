@@ -27,6 +27,36 @@ services:
     networks:
       - internal
 
+  xui_service:
+    build: ./3x_ui
+    container_name: xui_service
+    restart: always
+    env_file:
+      - ./3x_ui/.env
+    networks:
+      - internal
+    ports:
+      - "8001:8001"  # порт для 3x-ui API
+    
+  bot:
+    build: ./bot
+    container_name: bot
+    restart: always
+    env_file:
+      - ./bot/.env
+    depends_on:
+      - db_service
+      - xui_service
+    networks:
+      - internal
+    # ports:
+    #   - "5678:5678"  # порт для дебаггера
+    # command: >
+    #   sh -c "python -m debugpy --listen 0.0.0.0:5678 --wait-for-client main.py"
+    # ports:                 ← можно удалить или закомментировать, если не нужны другие порты
+    command: python main.py
+
+
   db_service:
     build: ./db_service
     container_name: db_service
@@ -39,7 +69,6 @@ services:
       - internal
     expose:
       - 8000
-    command: uvicorn main:app --host 0.0.0.0 --port 8000
     ports:
       - "8000:8000"
 

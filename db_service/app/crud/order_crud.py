@@ -7,7 +7,7 @@ from app.core.db import AsyncSessionLocal
 from datetime import date
 
 # Создание заказа
-async def create_order(user_id, platform: str, order_price=None, is_paid=None):
+async def create_order(user_id, platform: str, order_price=None, is_paid=None) -> Order:
     async with AsyncSessionLocal() as session:
         if not order_price:
             order_price = 79
@@ -44,7 +44,7 @@ async def get_orders(user_id):
             print(f"Ошибка: {e}")
 
 # Получение заказа 
-async def get_order(order_id):
+async def get_order(order_id) -> Order:
     async with AsyncSessionLocal() as session:
         try:
             result = await session.execute(select(Order).filter(Order.id == order_id))
@@ -54,7 +54,7 @@ async def get_order(order_id):
             print(f"Ошибка: {e}")
 
 # Обновление заказа
-async def update_order(order_id, order_price: int = None, is_paid: bool = None, platform: str = None):
+async def update_order(order_id, order_price: int = None, is_paid: bool = None, platform: str = None) -> Order:
     async with AsyncSessionLocal() as session:
         try:
             result = await session.execute(select(Order).filter(Order.id == order_id))

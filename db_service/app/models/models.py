@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, Date, Boolean, String, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
+from pydantic import BaseModel
 
 Base = declarative_base()
 
@@ -58,3 +59,12 @@ class Order(Base):
     user = relationship("User", back_populates="orders")
     
     key = relationship("Key", back_populates="order")
+
+class ResponseData(BaseModel):
+    user_name: str
+    user_status: str
+    is_premium: str
+    days_for_end: str
+    date_for_end: str
+    query_date: str
+    key_content: str

@@ -6,7 +6,7 @@ from app.models.models import User
 from app.core.db import AsyncSessionLocal
 
 # Создание пользователя
-async def create_user(tg_id, tg_username):
+async def create_user(tg_id, tg_username) -> User:
     async with AsyncSessionLocal() as session:
         user = await get_user_for_tg_id(tg_id)
         if user:
@@ -23,7 +23,7 @@ async def create_user(tg_id, tg_username):
             await session.rollback()
 
 # Функция для получения пользователя по ID в телеграме
-async def get_user_for_tg_id(user_tg_id: int):
+async def get_user_for_tg_id(user_tg_id: int) -> User:
     async with AsyncSessionLocal() as session:
         try:
             result = await session.execute(select(User).filter(User.tg_id == user_tg_id))
@@ -33,7 +33,7 @@ async def get_user_for_tg_id(user_tg_id: int):
             print(f"Ошибка: {e}")
 
 # Функция для получения пользователя по ID
-async def get_user_for_user_id(user_id: int):
+async def get_user_for_user_id(user_id: int) -> User:
     async with AsyncSessionLocal() as session:
         try:
             result = await session.execute(select(User).filter(User.id == user_id))

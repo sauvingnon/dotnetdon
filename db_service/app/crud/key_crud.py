@@ -9,7 +9,7 @@ from dateutil.relativedelta import relativedelta
 import uuid
 
 # Получить ключ по заказу
-async def get_key_for_order_id(order_id: int):
+async def get_key_for_order_id(order_id: int) -> Key:
     async with AsyncSessionLocal() as session:
         try:
             result = await session.execute(select(Key).filter(Key.order_id == order_id))
@@ -19,7 +19,7 @@ async def get_key_for_order_id(order_id: int):
             print(f"Ошибка: {e}")
 
 # Получить ключ по спец ID
-async def get_key_for_special_id(key_special_id: int):
+async def get_key_for_special_id(key_special_id: int) -> Key:
     async with AsyncSessionLocal() as session:
         try:
             result = await session.execute(select(Key).filter(Key.key_id == key_special_id))
@@ -29,7 +29,7 @@ async def get_key_for_special_id(key_special_id: int):
             print(f"Ошибка: {e}")
 
 # Функция для создания ключа
-async def create_key(key_content: str, user_id: int, order_id: int):
+async def create_key(key_content: str, user_id: int, order_id: int) -> Key:
     async with AsyncSessionLocal() as session:
         try:
             date_add_month = date.today() + relativedelta(months=1)
@@ -45,7 +45,7 @@ async def create_key(key_content: str, user_id: int, order_id: int):
             await session.commit()
             await session.refresh(new_key)
             print("Ключ добавлен")
-            return new_key.id
+            return new_key
         except SQLAlchemyError as e:
             print(f"Ошибка: {e}")
             await session.rollback()

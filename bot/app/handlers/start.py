@@ -1,15 +1,15 @@
-from aiogram import Router, types
-from aiogram.filters import CommandStart
+# Стартовое сообщение пользователя
+from aiogram import Router, F
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 from app.utils import resources
 from app.utils.states import Step
-from app.keyboards.inline import start_keyboard
+from app.keyboards.inline import main_menu
 
 router = Router()
 
 # Стартовая команда
-@router.message(CommandStart())
+@router.message(F.text == "/start")
 async def cmd_start(message: Message, state: FSMContext):
     # удаляем сообщение пользователя
     # await message.delete()
@@ -23,17 +23,16 @@ async def cmd_start(message: Message, state: FSMContext):
     
     # Если и там тоже пусто - именуем пользователя как "Unknown"
     if(user_name == None):
-        user_name = "Unknown"
+        user_name = f"Unknown {message.from_user.id}"
 
     await state.update_data(user_name=user_name)
 
     # отправляем первое сообщение
-    await message.answer(f"Привет, {user_name}!🙌")
 
-    # Отправим сообщение с кнопкой
-    await message.answer(resources.welcome_message, reply_markup=start_keyboard)
+    # Отправим сообщение с меню
+    await message.answer(resources.welcome_message, reply_markup=main_menu)
 
     # Сохраниим сообщение чтобы потом его удалить
     # await state.update_data(last_bot_message_id=sent.message_id)
     # Установим текущее состояние
-    await state.set_state(Step.choose_platform)
+    await state.set_state(Step.show_menu)

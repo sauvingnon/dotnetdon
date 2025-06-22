@@ -14,3 +14,5 @@ COPY . /app/
 
 # Команда запуска
 CMD ["python", "main.py"]
+
+ENV PYDEVD_DISABLE_FILE_VALIDATION=1

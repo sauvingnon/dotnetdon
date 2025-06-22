@@ -1,5 +1,6 @@
 from fastapi import APIRouter
-from app.api.services import xui_service
+from app.services import xui_service
+from app.api.schemas.client import ClientCreate
 
 router = APIRouter(
     prefix="/xui",
@@ -7,10 +8,10 @@ router = APIRouter(
 )
 
 @router.post("/add_client")
-async def add_client(tg_username: str):
-    subscription_url = await xui_service.add_new_client(tg_username)
-    if subscription_url:
-        return {"subscription_url": subscription_url}
+async def add_client(client: ClientCreate):
+    client = await xui_service.add_new_client(client.tg_username)
+    if client:
+        return client
     return {"error": "Не удалось создать клиента"}
 
 @router.get("/online_clients")
