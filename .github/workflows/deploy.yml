@@ -57,6 +57,7 @@ jobs:
           "cd /srv/dotnetdon_project &&
           export PGADMIN_DEFAULT_EMAIL='${{ secrets.PGADMIN_EMAIL }}' &&
           export PGADMIN_DEFAULT_PASSWORD='${{ secrets.PGADMIN_PASSWORD }}' &&
+          git reset --hard origin/master &&
           git pull origin master && docker compose down && docker compose up -d --build"
       
       - name: Проверка контейнеров
