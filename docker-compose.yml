@@ -14,19 +14,21 @@ services:
       - 5432
     ports:
     - "5432:5432"
+    mem_limit: 256m
+    cpus: "0.3"
 
-  pgadmin: 
-    image: dpage/pgadmin4
-    container_name: pgadmin4
-    restart: always
-    environment:
-      PGADMIN_DEFAULT_EMAIL: "${PGADMIN_DEFAULT_EMAIL}"
-      PGADMIN_DEFAULT_PASSWORD: "${PGADMIN_DEFAULT_PASSWORD}"
-    ports:
-      - "5050:80"  # Открываем порт наружу, чтобы ты мог зайти в браузере
-    networks:
-      - internal
-    command: gunicorn --bind 0.0.0.0:80 myapp:app
+  # pgadmin: 
+  #   image: dpage/pgadmin4
+  #   container_name: pgadmin4
+  #   restart: always
+  #   environment:
+  #     PGADMIN_DEFAULT_EMAIL: "${PGADMIN_DEFAULT_EMAIL}"
+  #     PGADMIN_DEFAULT_PASSWORD: "${PGADMIN_DEFAULT_PASSWORD}"
+  #   ports:
+  #     - "5050:80"  # Открываем порт наружу, чтобы ты мог зайти в браузере
+  #   networks:
+  #     - internal
+  #   command: gunicorn --bind 0.0.0.0:80 myapp:app
 
   xui_service:
     build: ./3x_ui
@@ -38,6 +40,8 @@ services:
       - internal
     ports:
       - "8001:8001"  # порт для 3x-ui API
+    mem_limit: 160m
+    cpus: "0.2"
     
   bot:
     build: ./bot
@@ -55,8 +59,9 @@ services:
     # command: >
     #   sh -c "python -m debugpy --listen 0.0.0.0:5678 --wait-for-client main.py"
     # ports:                 ← можно удалить или закомментировать, если не нужны другие порты
+    mem_limit: 128m
+    cpus: "0.2"
     command: python main.py
-
 
   db_service:
     build: ./db_service
@@ -64,12 +69,16 @@ services:
     restart: always
     env_file:
       - ./db_service/.env
+    volumes:
+      - ./db_service:/app
     depends_on:
       - db
     networks:
       - internal
     expose:
       - 8000
+    mem_limit: 128m
+    cpus: "0.2"
     ports:
       - "8000:8000"
 
