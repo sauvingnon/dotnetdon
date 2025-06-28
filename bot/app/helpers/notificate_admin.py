@@ -1,6 +1,6 @@
 import config
-from main import bot
+from aiogram.types import CallbackQuery
 
 # Метод для уведомления админа
-async def notificate_admin(message: str):
-    await bot.send_message(config.ADMIN_ID, message)
+async def notificate_admin(message: str, callback: CallbackQuery):
+    await callback.bot.send_message(config.ADMIN_ID, message)

@@ -4,7 +4,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 from app.utils import resources
 from app.utils.states import Step
-from app.keyboards.inline import main_menu
+from app.keyboards.inline import start_keyboard
 
 router = Router()
 
@@ -30,9 +30,9 @@ async def cmd_start(message: Message, state: FSMContext):
     # отправляем первое сообщение
 
     # Отправим сообщение с меню
-    await message.answer(resources.welcome_message, reply_markup=main_menu)
+    await message.answer(resources.welcome_message, reply_markup=start_keyboard)
 
     # Сохраниим сообщение чтобы потом его удалить
     # await state.update_data(last_bot_message_id=sent.message_id)
     # Установим текущее состояние
-    await state.set_state(Step.show_menu)
+    await state.set_state(Step.choose_platform)

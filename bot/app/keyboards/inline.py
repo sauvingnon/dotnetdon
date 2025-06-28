@@ -3,7 +3,7 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 # Клавиатура старта
 start_keyboard = InlineKeyboardMarkup(
     inline_keyboard=[
-        [InlineKeyboardButton(text="Подключиться", callback_data="show_menu")]
+        [InlineKeyboardButton(text="Подключиться", callback_data="choose_platform")]
     ]
 )
 
