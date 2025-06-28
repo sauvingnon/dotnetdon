@@ -2,18 +2,19 @@ import asyncio
 import logging
 from aiogram import Bot, Dispatcher
 from config import BOT_TOKEN
-from dispatcher import setup_routers
+from app.dispatcher_module import setup_routers
+from aiogram.fsm.storage.memory import MemoryStorage
+from app.keyboards.inline import commands
 
 logging.basicConfig(level=logging.INFO)
 
+dp = Dispatcher(storage=MemoryStorage())
 bot = Bot(token=BOT_TOKEN)
-dp = Dispatcher()
-
 setup_routers(dp)
 
 async def main():
+    await bot.set_my_commands(commands)
     await dp.start_polling(bot)
 
-# Тест CI\CD попытка 10!!!
 if __name__ == "__main__":
     asyncio.run(main())

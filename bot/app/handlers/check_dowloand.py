@@ -10,6 +10,7 @@ router = Router()
 # Проверка, скачал ли пользователь все
 @router.callback_query(F.data.in_({"success_dowloand", "error_dowloand"}), Step.check_dowloand)
 async def handle_check_dowloand(callback: CallbackQuery, state: FSMContext):
+    await callback.message.delete()
     status = callback.data # "success_dowloand" или "error_dowloand"
 
     if status == "success_dowloand":

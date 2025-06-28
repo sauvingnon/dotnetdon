@@ -1,7 +1,6 @@
-# Тут хранится меню
+# Получение пробного доступа
 from aiogram import Router, F
 from app.utils.states import Step
-from app.keyboards.inline import main_menu
 from aiogram.types import CallbackQuery
 from aiogram.fsm.context import FSMContext
 from app.services.db import user_service
@@ -10,8 +9,9 @@ from app.helpers.choose_platform import choose_platform
 router = Router()
 
 @router.callback_query(F.data == "start_trial", Step.show_menu)
-async def show_menu(callback: CallbackQuery, state: FSMContext):
+async def start_trial(callback: CallbackQuery, state: FSMContext):
     # Проверим, а этот пользователь уже брал триал?
+    await callback.message.delete()
     user = await user_service.get_user_for_tg_id(callback.from_user.id)
 
     # Если триал уже был использован, то увы, больше нет
@@ -27,5 +27,5 @@ async def show_menu(callback: CallbackQuery, state: FSMContext):
 
     await choose_platform(callback, state)
 
-    
+    await callback.answer()
 

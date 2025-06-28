@@ -13,3 +13,7 @@ class Step(StatesGroup):
     payment = State()
     # Отправка ключа
     send_key = State()
+    # Проверка триала
+    # start_trial = State()
+    # Показать тарифы подписки
+    # buy_subscription = State()

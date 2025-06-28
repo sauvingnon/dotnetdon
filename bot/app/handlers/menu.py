@@ -9,4 +9,5 @@ router = Router()
 
 @router.callback_query(F.data == "show_menu", Step.show_menu)
 async def show_menu(callback: CallbackQuery, state: FSMContext):
-    await callback.message.answer("Меню:", reply_markup=main_menu)
+    await callback.message.delete()
+    await callback.message.answer("Выбери пункт меню:", reply_markup=main_menu)

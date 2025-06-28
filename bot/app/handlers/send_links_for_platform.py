@@ -11,6 +11,8 @@ router = Router()
 async def send_links_for_platform(callback: CallbackQuery, state: FSMContext):
     platform = callback.data  # "platform_ios" или "platform_android"
 
+    await callback.message.delete()
+
     # Сохраняем в state
     await state.update_data(platform=platform)
 

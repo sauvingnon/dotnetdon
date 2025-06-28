@@ -13,14 +13,13 @@ import config
 # Выдать доступ для пользователя
 async def send_access_for_user(callback: CallbackQuery, state: FSMContext):
 
-    is_trial = False
     data = await state.get_data()
     platform = data.get("platform")
     user_name = data.get("user_name")
     is_trial = data.get("user_get_trial")
     tg_id = callback.from_user.id
 
-    user = await user_service.create_user(tg_id=tg_id, tg_username=user_name)
+    user = await user_service.create_user(tg_id=tg_id, tg_username=user_name, is_trial=is_trial)
 
     if not user: 
         await failure_handler('user из бд не получен', callback)
@@ -43,6 +42,8 @@ async def send_access_for_user(callback: CallbackQuery, state: FSMContext):
     if not key: 
         await failure_handler('Ключ из бд не получен', callback)
         return
+    
+    # Теперь, если это тест периуд, установим ему длительность 3 дня
 
     key_id = key.key_id
 

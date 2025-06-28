@@ -29,10 +29,13 @@ async def cmd_start(message: Message, state: FSMContext):
 
     # отправляем первое сообщение
 
+    # Установим текущее состояние
+    await state.set_state(Step.show_menu)
+
     # Отправим сообщение с меню
-    await message.answer(resources.welcome_message, reply_markup=main_menu)
+    await message.answer(resources.welcome_message)
+    await message.answer("Выбери пункт меню:", reply_markup=main_menu)
 
     # Сохраниим сообщение чтобы потом его удалить
     # await state.update_data(last_bot_message_id=sent.message_id)
-    # Установим текущее состояние
-    await state.set_state(Step.show_menu)
+    
