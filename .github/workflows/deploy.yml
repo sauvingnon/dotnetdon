@@ -53,13 +53,20 @@ jobs:
           scp -i ~/.ssh/id_ed25519 3x_ui/.env ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/srv/dotnetdon_project/3x_ui/.env
 
       - name: Deploy over SSH
-        run: ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} 
-          "cd /srv/dotnetdon_project &&
+        run: | 
+          ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} '
+          if [ ! -d /srv/dotnetdon_project/.git ]; then
+            git clone https://github.com/sauvingnon/dotnetdon.git /srv/dotnetdon_project
+          fi
+          cd /srv/dotnetdon_project &&
           export PGADMIN_DEFAULT_EMAIL='${{ secrets.PGADMIN_EMAIL }}' &&
           export PGADMIN_DEFAULT_PASSWORD='${{ secrets.PGADMIN_PASSWORD }}' &&
           git reset --hard origin/master &&
-          git pull origin master && docker compose down && docker compose up -d --build"
-      
+          git pull origin master &&
+          docker compose down &&
+          docker compose up -d --build
+          '
+        
       - name: Проверка контейнеров
         run: |
           ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} '
