@@ -45,13 +45,6 @@ jobs:
         run: |
           mkdir -p 3x_ui
           echo "${{ secrets.PANEL_ENV_FILE }}" > 3x_ui/.env
-
-      - name: Create remote folders
-        run: | 
-          ssh -i ~/.ssh/id_ed25519 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}
-          mkdir -p /srv/dotnetdon_project/bot &&
-          mkdir -p /srv/dotnetdon_project/db_service &&
-          mkdir -p /srv/dotnetdon_project/3x_ui
         
       - name: Copy .env files to server
         run: |
