@@ -50,7 +50,7 @@ jobs:
         run: | 
           ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} '
           if [ ! -d /srv/dotnetdon_project/.git ]; then
-            git clone https://github.com/sauvingnon/dotnetdon.git /srv/dotnetdon_project
+            git clone git@github.com:sauvingnon/dotnetdon.git /srv/dotnetdon_project
           fi
           '
         
