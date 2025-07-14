@@ -17,18 +17,20 @@ services:
     mem_limit: 256m
     cpus: "0.3"
 
-  # pgadmin: 
-  #   image: dpage/pgadmin4
-  #   container_name: pgadmin4
-  #   restart: always
-  #   environment:
-  #     PGADMIN_DEFAULT_EMAIL: "${PGADMIN_DEFAULT_EMAIL}"
-  #     PGADMIN_DEFAULT_PASSWORD: "${PGADMIN_DEFAULT_PASSWORD}"
-  #   ports:
-  #     - "5050:80"  # Открываем порт наружу, чтобы ты мог зайти в браузере
-  #   networks:
-  #     - internal
-  #   command: gunicorn --bind 0.0.0.0:80 myapp:app
+  pgadmin: 
+    image: dpage/pgadmin4
+    container_name: pgadmin4
+    restart: always
+    environment:
+      # PGADMIN_DEFAULT_EMAIL: "${PGADMIN_DEFAULT_EMAIL}"
+      # PGADMIN_DEFAULT_PASSWORD: "${PGADMIN_DEFAULT_PASSWORD}"
+      PGADMIN_DEFAULT_EMAIL: "admin@admin.com"
+      PGADMIN_DEFAULT_PASSWORD: "admin"
+    ports:
+      - "5050:80"  # Открываем порт наружу, чтобы ты мог зайти в браузере
+    networks:
+      - internal
+    command: gunicorn --bind 0.0.0.0:80 myapp:app
 
   xui_service:
     build: ./3x_ui

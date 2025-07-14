@@ -21,7 +21,7 @@ async def add_new_client(tg_username: str) -> PClient | None:
     id = str(uuid.uuid4())
     short_id = id.replace('-', '')[:10]
     sub_id = f"dotNetDon_VPN_{short_id}"
-    email = f"{short_id}{tg_username}"
+    email = f"{short_id}_{tg_username}"
 
     try:
         new_client = Client(

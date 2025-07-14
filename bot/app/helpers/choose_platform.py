@@ -1,4 +1,4 @@
-from app.utils.states import Step
+from app.states.subscription import Step
 from aiogram.types import CallbackQuery
 from aiogram.fsm.context import FSMContext
 from app.keyboards.inline import platform_keyboard

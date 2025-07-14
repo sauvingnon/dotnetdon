@@ -14,6 +14,7 @@ class User(Base):
     tg_username = Column(String, nullable=False)
     is_premium = Column(Boolean, default=False)
 
+
     keys = relationship("Key", back_populates="user", cascade="all, delete-orphan")
     orders = relationship("Order", back_populates="user", cascade="all, delete-orphan")
 
@@ -26,7 +27,11 @@ class Key(Base):
     active_until = Column(Date, nullable=False)
 
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     user = relationship("User", back_populates="keys")
+
+    order_id = Column(Integer, ForeignKey("orders.id"), nullable=False)
 
     order_id = Column(Integer, ForeignKey("orders.id"), nullable=False)
     order = relationship("Order", back_populates="key")
@@ -43,8 +48,10 @@ class Order(Base):
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     user = relationship("User", back_populates="orders")
 
+
     key = relationship("Key", back_populates="order")
 
+# Pydantic модель — не влияет на миграции
 # Pydantic модель — не влияет на миграции
 class ResponseData(BaseModel):
     user_name: str
@@ -54,3 +61,4 @@ class ResponseData(BaseModel):
     date_for_end: str
     query_date: str
     key_content: str
+

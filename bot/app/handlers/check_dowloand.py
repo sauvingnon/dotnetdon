@@ -1,7 +1,7 @@
 from aiogram import Router, F
 from aiogram.types import Message, CallbackQuery
 from aiogram.fsm.context import FSMContext
-from app.utils.states import Step
+from app.states.subscription import Step
 from app.helpers.send_access_for_user import send_access_for_user
 from app.helpers.send_another_links import send_another_links
 

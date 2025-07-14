@@ -1,6 +1,6 @@
 # Помощь
 from aiogram import Router, F
-from app.utils.states import Step
+from app.states.subscription import Step
 from app.keyboards.inline import help_manu
 from aiogram.types import CallbackQuery
 from aiogram.fsm.context import FSMContext

@@ -3,8 +3,9 @@ from aiogram import Router, F
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 from app.utils import resources
-from app.utils.states import Step
-from app.keyboards.inline import main_menu
+from app.states.subscription import Step
+from app.keyboards.inline import get_main_menu
+from app.services.db import user_service
 
 router = Router()
 
@@ -25,16 +26,20 @@ async def cmd_start(message: Message, state: FSMContext):
     if(user_name == None):
         user_name = f"Unknown {message.from_user.id}"
 
-    await state.update_data(user_name=user_name)
+    # await state.update_data(user_name=user_name)
 
-    # отправляем первое сообщение
+    # Сразу создадим юзера, при первом обращении добавим его в базу
+    await user_service.create_user(message.from_user.id, user_name)
 
     # Установим текущее состояние
     await state.set_state(Step.show_menu)
 
     # Отправим сообщение с меню
     await message.answer(resources.welcome_message)
-    await message.answer("Выбери пункт меню:", reply_markup=main_menu)
+
+    keyboard = get_main_menu(message.from_user.id)
+
+    await message.answer("Выбери пункт меню:", reply_markup=keyboard)
 
     # Сохраниим сообщение чтобы потом его удалить
     # await state.update_data(last_bot_message_id=sent.message_id)

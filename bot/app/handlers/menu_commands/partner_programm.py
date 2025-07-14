@@ -1,6 +1,6 @@
 # Партнерская программа
 from aiogram import Router, F
-from app.utils.states import Step
+from app.states.subscription import Step
 from app.keyboards.inline import empty_keyboard
 from app.utils.resources import partner_program_message
 from aiogram.types import CallbackQuery

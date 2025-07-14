@@ -1,11 +1,14 @@
 # 💡 Все клавиатуры и команды бота
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, BotCommand
+from config import ADMIN_ID, ADMIN_ID_2
+
+ADMIN_IDS = [ADMIN_ID, ADMIN_ID_2]
 
 # 📌 Команды, отображаемые в меню Telegram
 commands = [
     BotCommand(command="menu", description="🚀 Главное меню"),
     BotCommand(command="help", description="🆘 Помощь"),
-    BotCommand(command="subscribe", description="💳 Подписаться"),
+    BotCommand(command="subscribe", description="💳 Подписаться")
 ]
 
 # 🟢 Стартовая клавиатура
@@ -44,9 +47,9 @@ keyboard_after_all_links = InlineKeyboardMarkup(
     ]
 )
 
-# 📋 Главное меню
-main_menu = InlineKeyboardMarkup(
-    inline_keyboard=[
+def get_main_menu(user_id: int) -> InlineKeyboardMarkup:
+    # Базовое меню
+    keyboard = [
         [InlineKeyboardButton(text="🎁 Пробный период", callback_data="start_trial")],
         [InlineKeyboardButton(text="💳 Купить/Продлить", callback_data="buy_subscription")],
         [InlineKeyboardButton(text="🧾 Мои покупки", callback_data="my_subscriptions")],
@@ -54,6 +57,19 @@ main_menu = InlineKeyboardMarkup(
         [InlineKeyboardButton(text="📣 О нас", callback_data="about_us")],
         [InlineKeyboardButton(text="👨‍💻 Техподдержка", url="https://t.me/sauvingnon")],
         [InlineKeyboardButton(text="🤝 Партнерская программа", callback_data="partner_programm")]
+    ]
+
+    # Если пользователь админ — добавляем кнопку
+    if str(user_id) in ADMIN_IDS:
+        keyboard.append([InlineKeyboardButton(text="🛠 Админ-панель", callback_data="admin_panel")])
+
+    return InlineKeyboardMarkup(inline_keyboard=keyboard)
+
+# 🛠 Админ панель
+admin_panel = InlineKeyboardMarkup(
+    inline_keyboard=[
+        [InlineKeyboardButton(text="🔌 Добавить пользователя", callback_data="add_admin_user")],
+        [InlineKeyboardButton(text="🏠 Главное меню", callback_data="show_menu")]
     ]
 )
 
