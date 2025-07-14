@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from app.services import xui_service
-from app.api.schemas.client import ClientCreate
+from app.api.schemas.client import ClientCreate, TrialRequest
 
 router = APIRouter(
     prefix="/xui",
@@ -18,3 +18,14 @@ async def add_client(client: ClientCreate):
 async def online_clients():
     clients = await xui_service.get_clients_online()
     return {"online_clients": clients}
+
+@router.post("/give_trial")
+async def give_trial(req: TrialRequest):
+    client = await xui_service.get_client_by_username(req.tg_username)
+    if not client:
+        return {"error": "Клиент не найден"}
+
+    success = await xui_service.give_trial(client.id, req.days)
+    if success:
+        return {"ok": True, "trial_until": (datetime.utcnow() + timedelta(days=req.days)).isoformat()}
+    return {"error": "Не удалось выдать триал"}
