@@ -1,8 +1,10 @@
 from aiogram import Dispatcher
-from app.handlers import menu, start, send_links_for_platform, check_dowloand
+from app.handlers import menu, start, send_links_for_platform, check_dowloand, check_payment
 from app.handlers.menu_commands import buy_subscription, handle_plan_choice, help, start_trial
 from app.handlers.menu_commands import about_us, admin_panel
 from app.handlers.admin_commands import add_admin_user
+from app.handlers import start_payment_process
+from app.handlers.check_email import confirm_email, get_email
 
 def setup_routers(dp: Dispatcher):
     dp.include_router(menu.router)
@@ -16,3 +18,7 @@ def setup_routers(dp: Dispatcher):
     dp.include_router(check_dowloand.router)
     dp.include_router(admin_panel.router)
     dp.include_router(add_admin_user.router)
+    dp.include_router(check_payment.router)
+    dp.include_router(start_payment_process.router)
+    dp.include_router(confirm_email.router)
+    dp.include_router(get_email.router)

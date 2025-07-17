@@ -5,7 +5,12 @@ from aiogram.fsm.state import StatesGroup, State
 class SubscriptionState(StatesGroup):
     choosing_plan = State()
     confirming = State()
-    input_email = State()
+    check_email = State()
+    get_email = State()
+
+class ConfirmEmailState(StatesGroup):
+    confirm_existing = State()
+    confirm_new = State()
 
 class Step(StatesGroup):
     # Выбор платформы

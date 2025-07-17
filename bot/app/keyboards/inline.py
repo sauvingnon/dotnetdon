@@ -18,6 +18,18 @@ start_keyboard = InlineKeyboardMarkup(
     ]
 )
 
+def email_confirm_kb():
+    return InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text="✅ Да", callback_data="yes")],
+        [InlineKeyboardButton(text="❌ Нет", callback_data="no")],
+    ])
+
+input_email_keyboard = InlineKeyboardMarkup(
+    inline_keyboard=[
+        [InlineKeyboardButton(text="💳 Оплатить", callback_data="payment")]
+    ]
+)
+
 empty_keyboard = InlineKeyboardMarkup(
     inline_keyboard=[
         [InlineKeyboardButton(text="🏠 Главное меню", callback_data="show_menu")]
@@ -28,7 +40,10 @@ empty_keyboard = InlineKeyboardMarkup(
 platform_keyboard = InlineKeyboardMarkup(
     inline_keyboard=[
         [InlineKeyboardButton(text="🍏 iPhone", callback_data="platform_ios")],
-        [InlineKeyboardButton(text="🤖 Android", callback_data="platform_android")]
+        [InlineKeyboardButton(text="🤖 Android", callback_data="platform_android")],
+        [InlineKeyboardButton(text="🪟 Windows", callback_data="platform_windows")],
+        [InlineKeyboardButton(text="🍎 macOS", callback_data="platform_macos")],
+        [InlineKeyboardButton(text="📺 Smart TV", callback_data="platform_smarttv")]
     ]
 )
 
@@ -72,6 +87,16 @@ admin_panel = InlineKeyboardMarkup(
         [InlineKeyboardButton(text="🏠 Главное меню", callback_data="show_menu")]
     ]
 )
+
+# Оплата и проверка оплаты
+def payment_keyboard(url: str) -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup(
+        inline_keyboard=[
+            [InlineKeyboardButton(text="💳 Оплатить", url=url)],
+            [InlineKeyboardButton(text="✅ Проверить оплату", callback_data="check_payment")],
+            [InlineKeyboardButton(text="🏠 Главное меню", callback_data="show_menu")]
+        ]
+    )
 
 # 💸 Тарифы на подписку
 plans_tariff = InlineKeyboardMarkup(

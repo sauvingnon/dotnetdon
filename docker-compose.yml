@@ -45,18 +45,18 @@ services:
     mem_limit: 160m
     cpus: "0.2"
     
-  # payment_service:
-  #   build: ./payment_service
-  #   container_name: payment_service
-  #   restart: unless-stopped
-  #   env_file:
-  #     - ./payment_service/.env
-  #   networks:
-  #     - internal
-  #   ports:
-  #     - "8015:8015"  # порт для 3x-ui API
-  #   mem_limit: 160m
-  #   cpus: "0.2"
+  payment_service:
+    build: ./payment_service
+    container_name: payment_service
+    restart: unless-stopped
+    env_file:
+      - ./payment_service/.env
+    networks:
+      - internal
+    ports:
+      - "8015:8015"
+    mem_limit: 160m
+    cpus: "0.2"
 
   bot:
     build: ./bot
@@ -73,7 +73,6 @@ services:
     #   - "5678:5678"  # порт для дебаггера
     # command: >
     #   sh -c "python -m debugpy --listen 0.0.0.0:5678 --wait-for-client main.py"
-    # ports:                 ← можно удалить или закомментировать, если не нужны другие порты
     mem_limit: 128m
     cpus: "0.2"
     command: python main.py

@@ -2,11 +2,13 @@
 from aiogram import Router, F
 from aiogram.types import CallbackQuery
 from aiogram.fsm.context import FSMContext
-from app.helpers.choose_platform import choose_platform
+from app.states.subscription import SubscriptionState, ConfirmEmailState
+from app.services.db import user_service
+from app.keyboards.inline import email_confirm_kb
 
 router = Router()
 
-@router.callback_query(lambda c: c.data.startswith("plan_"))
+@router.callback_query(lambda c: c.data.startswith("plan_"), SubscriptionState.choosing_plan)
 async def handle_plan_choice(callback: CallbackQuery, state: FSMContext):
 
     await callback.message.delete()
@@ -27,6 +29,24 @@ async def handle_plan_choice(callback: CallbackQuery, state: FSMContext):
         price = 1999
         duration = 12
 
-    await callback.message.answer(f"Вы выбрали тариф на {plan.upper()} — {price}₽. Обрабатываем...")
+    await state.set_state(SubscriptionState.check_email)
+
+    await state.update_data(price=price)
+    await state.update_data(duration=duration)
+
+    await callback.message.answer(f"Вы выбрали тариф на {plan.upper()} — {price}₽.")
     await callback.answer()
-    await choose_platform(callback=callback, state=state)
+
+    user = await user_service.get_user_for_tg_id(callback.from_user.id)
+
+    if user and user.email:
+        await state.update_data(email=user.email)
+        await callback.message.answer(
+            f"Твоя почта: {user.email}\nВсё верно?",
+            reply_markup=email_confirm_kb()  # Клавиатура с "Да / Нет"
+        )
+        await state.set_state(ConfirmEmailState.confirm_existing)
+    else:
+        await callback.message.answer("Введите вашу почту:")
+        await state.set_state(SubscriptionState.get_email)
+

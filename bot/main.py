@@ -1,7 +1,7 @@
 import asyncio
 import logging
 from aiogram import Bot, Dispatcher
-from config import BOT_TOKEN
+from config import BOT_TOKEN, BOT_TOKEN_TEST
 from app.dispatcher_module import setup_routers
 from aiogram.fsm.storage.memory import MemoryStorage
 from app.keyboards.inline import commands
@@ -9,7 +9,9 @@ from app.keyboards.inline import commands
 logging.basicConfig(level=logging.INFO)
 
 dp = Dispatcher(storage=MemoryStorage())
-bot = Bot(token=BOT_TOKEN)
+# bot = Bot(token=BOT_TOKEN)
+bot = Bot(token=BOT_TOKEN_TEST)
+
 setup_routers(dp)
 
 async def main():

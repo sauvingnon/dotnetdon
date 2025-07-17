@@ -7,9 +7,12 @@ from aiogram.fsm.context import FSMContext
 
 router = Router()
 
+# @router.message(F.text == "/menu")
 @router.callback_query(F.data == "show_menu", Step.show_menu)
 async def show_menu(callback: CallbackQuery, state: FSMContext):
     await callback.message.delete()
+
+    await state.set_state(Step.show_menu)
 
     keyboard = get_main_menu(callback.from_user.id)
 

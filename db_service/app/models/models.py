@@ -12,8 +12,8 @@ class User(Base):
     tg_id = Column(Integer, unique=True, nullable=False)
     test_used = Column(Boolean, default=False)
     tg_username = Column(String, nullable=False)
+    email = Column(String, nullable=True)
     is_premium = Column(Boolean, default=False)
-
 
     keys = relationship("Key", back_populates="user", cascade="all, delete-orphan")
     orders = relationship("Order", back_populates="user", cascade="all, delete-orphan")
@@ -22,8 +22,9 @@ class Key(Base):
     __tablename__ = "keys"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    key_content = Column(String, nullable=True)
-    key_id = Column(String, nullable=True)
+    sub_url = Column(String, nullable=True)
+    client_id = Column(String, nullable=True)
+    web_id = Column(String, nullable=True)
     active_until = Column(Date, nullable=False)
 
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
@@ -41,9 +42,11 @@ class Order(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     order_price = Column(Integer, nullable=False)
+    duration = Column(Integer, nullable=False)
     create_date = Column(Date, nullable=False)
     is_paid = Column(Boolean, nullable=False)
     platform = Column(String, nullable=False)
+    payment_id = Column(String, nullable=False)
 
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     user = relationship("User", back_populates="orders")
@@ -56,6 +59,7 @@ class Order(Base):
 class ResponseData(BaseModel):
     user_name: str
     user_status: str
+    email: str
     is_premium: str
     days_for_end: str
     date_for_end: str

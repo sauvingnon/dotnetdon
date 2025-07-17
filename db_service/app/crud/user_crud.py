@@ -22,6 +22,34 @@ async def create_user(tg_id, tg_username) -> User:
             print(f"Ошибка: {e}")
             await session.rollback()
 
+# Редактирование пользователя
+async def update_user(user_tg_id: int, new_email: str = None, new_test_used: bool = None, new_is_premium: bool = None) -> bool:
+    async with AsyncSessionLocal() as session:
+
+        user = await get_user_for_tg_id(user_tg_id)
+
+        if not user:
+            return False
+
+        try:
+            if new_email != None:
+                user.email = new_email
+
+            if new_test_used != None:
+                user.test_used = new_test_used
+
+            if new_is_premium != None:
+                user.is_premium = new_is_premium
+
+            session.add(user)
+            await session.commit()
+            print("Пользователь обновлен успешно")
+            return True
+        except SQLAlchemyError as e:
+            print(f"Ошибка: {e}")
+            await session.rollback()
+            return False
+
 # Функция для получения пользователя по ID в телеграме
 async def get_user_for_tg_id(user_tg_id: int) -> User:
     async with AsyncSessionLocal() as session:

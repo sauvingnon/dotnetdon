@@ -15,8 +15,8 @@ async def start_trial(callback: CallbackQuery, state: FSMContext):
     await callback.message.delete()
     user = await user_service.get_user_for_tg_id(callback.from_user.id)
 
-    if not user:
-        failure_handler("Ошибка при получении триал-доступа.", callback=callback)
+    if user == None:
+        await failure_handler("Ошибка при получении триал-доступа.", callback)
         return
 
     # Если триал уже был использован, то увы, больше нет

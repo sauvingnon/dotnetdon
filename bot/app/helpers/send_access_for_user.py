@@ -17,7 +17,7 @@ async def send_access_for_user(callback: CallbackQuery, state: FSMContext):
 
     user = await user_service.get_user_for_tg_id(tg_id)
 
-    if not user: 
+    if user == None: 
         await failure_handler('user из бд не получен', callback)
         return
     
@@ -30,13 +30,13 @@ async def send_access_for_user(callback: CallbackQuery, state: FSMContext):
 
     order = await order_service.create_order(user.id, platform, order_price, is_paid)
 
-    if not order: 
+    if order == None: 
         await failure_handler('order из бд не получен', callback)
         return
 
     url_sub = await get_access_for_user(user, order)
 
-    if not url_sub:
+    if url_sub == None:
         await failure_handler('Доступ для пользователя не был выдан', callback)
         return
     
