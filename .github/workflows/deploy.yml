@@ -46,6 +46,11 @@ jobs:
           mkdir -p 3x_ui
           echo "${{ secrets.PANEL_ENV_FILE }}" > 3x_ui/.env
 
+      - name: Create payment_service .env file
+        run: |
+          mkdir -p payment_service
+          echo "${{ secrets.PAYMENT_ENV_FILE }}" > payment_service/.env
+
       - name: Clone Repo if not exists
         run: | 
           ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} '
@@ -59,6 +64,7 @@ jobs:
           scp -i ~/.ssh/id_ed25519 bot/.env ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/srv/dotnetdon_project/bot/.env
           scp -i ~/.ssh/id_ed25519 db_service/.env ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/srv/dotnetdon_project/db_service/.env
           scp -i ~/.ssh/id_ed25519 3x_ui/.env ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/srv/dotnetdon_project/3x_ui/.env
+          scp -i ~/.ssh/id_ed25519 payment_service/.env ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/srv/dotnetdon_project/payment_service/.env
 
       - name: Deploy over SSH
         run: | 
@@ -81,7 +87,7 @@ jobs:
             echo ""
             echo "🚨 Проверка: все сервисы running?"
             FAIL=0
-            for c in bot db_service xui_service postgres_db pgadmin4; do
+            for c in bot db_service payment_service xui_service postgres_db pgadmin4; do
               STATUS=$(docker inspect -f "{{.State.Status}}" ${c} || echo "missing")
               echo "$c -> $STATUS"
               if [ "$STATUS" != "running" ]; then
