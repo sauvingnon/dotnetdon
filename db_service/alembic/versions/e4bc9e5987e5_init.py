@@ -1,8 +1,8 @@
 """init
 
-Revision ID: 77784b96b790
+Revision ID: e4bc9e5987e5
 Revises: 
-Create Date: 2025-06-25 14:28:15.089765
+Create Date: 2025-07-21 21:25:03.449388
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '77784b96b790'
+revision: str = 'e4bc9e5987e5'
 down_revision: Union[str, Sequence[str], None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -26,6 +26,7 @@ def upgrade() -> None:
     sa.Column('tg_id', sa.Integer(), nullable=False),
     sa.Column('test_used', sa.Boolean(), nullable=True),
     sa.Column('tg_username', sa.String(), nullable=False),
+    sa.Column('email', sa.String(), nullable=True),
     sa.Column('is_premium', sa.Boolean(), nullable=True),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('tg_id')
@@ -33,20 +34,23 @@ def upgrade() -> None:
     op.create_table('orders',
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('order_price', sa.Integer(), nullable=False),
-    sa.Column('create_date', sa.Date(), nullable=False),
+    sa.Column('duration', sa.Integer(), nullable=False),
+    sa.Column('create_date', sa.DateTime(), nullable=False),
     sa.Column('is_paid', sa.Boolean(), nullable=False),
     sa.Column('platform', sa.String(), nullable=False),
+    sa.Column('payment_id', sa.String(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('keys',
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
-    sa.Column('key_content', sa.String(), nullable=True),
-    sa.Column('key_id', sa.String(), nullable=True),
-    sa.Column('active_until', sa.Date(), nullable=False),
+    sa.Column('sub_url', sa.String(), nullable=True),
+    sa.Column('client_email', sa.String(), nullable=True),
+    sa.Column('web_id', sa.String(), nullable=True),
+    sa.Column('active_until', sa.DateTime(timezone=True), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=False),
-    sa.Column('order_id', sa.Integer(), nullable=False),
+    sa.Column('order_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['order_id'], ['orders.id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
