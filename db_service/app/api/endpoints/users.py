@@ -2,13 +2,18 @@
 
 from fastapi import APIRouter
 from app.crud import user_crud
-from app.api.schemas.user import UserCreate
+from app.api.schemas.user import UserCreate, UserUpdate
+from app.models.models import User
 
 router = APIRouter()
 
 @router.post("/create_user")
-async def create_user(user: UserCreate):
-    return await user_crud.create_user(user.tg_id, user.tg_username)
+async def create_user(create_request: UserCreate):
+    return await user_crud.create_user(create_request.tg_id, create_request.tg_username)
+
+@router.post("/update_user")
+async def update_user(update_request: UserUpdate):
+    return await user_crud.update_user(update_request.user_tg_id, update_request.new_email, update_request.new_test_used, update_request.new_is_premium)
 
 @router.get("/get_user_for_tg_id")
 async def get_user_for_tg_id(tg_id: int):

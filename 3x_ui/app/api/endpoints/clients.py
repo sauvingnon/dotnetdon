@@ -1,6 +1,7 @@
+import datetime
 from fastapi import APIRouter
 from app.services import xui_service
-from app.api.schemas.client import ClientCreate, TrialRequest
+from app.api.schemas.client import ClientCreate, TrialRequest, ClientUpdate
 
 router = APIRouter(
     prefix="/xui",
@@ -9,10 +10,11 @@ router = APIRouter(
 
 @router.post("/add_client")
 async def add_client(client: ClientCreate):
-    client = await xui_service.add_new_client(client.tg_username)
-    if client:
-        return client
-    return {"error": "Не удалось создать клиента"}
+    return await xui_service.add_new_client(client.tg_username, client.duration, client.trial_duration)
+
+@router.patch("/update_client")
+async def update_client(client: ClientUpdate):
+    return await xui_service.update_client(client_email=client.client_email, new_duration=client.new_duration)
 
 @router.get("/online_clients")
 async def online_clients():
@@ -27,5 +29,5 @@ async def give_trial(req: TrialRequest):
 
     success = await xui_service.give_trial(client.id, req.days)
     if success:
-        return {"ok": True, "trial_until": (datetime.utcnow() + timedelta(days=req.days)).isoformat()}
+        return {"ok": True, "trial_until": (datetime.utcnow() + datetime.timedelta(days=req.days)).isoformat()}
     return {"error": "Не удалось выдать триал"}

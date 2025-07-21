@@ -30,6 +30,35 @@ async def create_user(tg_id: int, tg_username: str, is_trial: bool = False) -> O
     except Exception as e:
         print(f"Неизвестная ошибка: {e}")
         return None 
+    
+async def update_user(user_tg_id: int, new_email: str = None, new_test_used: bool = None, new_is_premium: bool = None) -> Optional[bool]:
+    """
+    Изменить существующего пользователя.
+    """
+    try:
+        response = await client.post(
+            f"{entity_schema}/update_user",
+            json={"user_tg_id": user_tg_id, 
+                  "new_email": new_email,
+                  "new_test_used": new_test_used,
+                  "new_is_premium": new_is_premium
+                  }
+        )
+        response.raise_for_status()
+        data = response.json()
+        return data
+    except HTTPStatusError as e:
+        if e.response.status_code == 404:
+            return None
+        raise  
+
+    except (ConnectTimeout, RequestError) as e:
+        print(f"Ошибка при подключении или запросе: {e}")
+        return None 
+
+    except Exception as e:
+        print(f"Неизвестная ошибка: {e}")
+        return None 
 
 async def get_user_for_tg_id(tg_id: int) -> Optional[User]:
     """

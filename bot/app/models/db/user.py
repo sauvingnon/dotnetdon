@@ -7,6 +7,7 @@ class User(BaseModel):
     id: int
     tg_id: int
     tg_username: str
+    email: Optional[str] = None
     test_used: bool
     is_premium: bool
     keys: Optional[List[Key]] = None

@@ -1,19 +1,18 @@
-# Помощь
+# instruction
 from aiogram import Router, F
 from app.states.subscription import Step
-from app.keyboards.inline import help_manu
+from app.helpers.choose_platform import choose_platform
 from aiogram.types import CallbackQuery
 from aiogram.fsm.context import FSMContext
 
 router = Router()
 
 # @router.message(F.text == "/help")
-@router.callback_query(F.data == "help", Step.show_menu)
+@router.callback_query(F.data == "instruction", Step.show_menu)
 async def help(callback: CallbackQuery, state: FSMContext):
     # Отправим сообщение с меню
-    await state.set_state(Step.show_menu)
     await callback.message.delete()
-    await callback.message.answer("Выбери пункт меню:", reply_markup=help_manu)
+    await choose_platform(callback, state)
     await callback.answer()
     
 

@@ -3,6 +3,7 @@ from aiogram.types import Message, CallbackQuery
 from aiogram.fsm.context import FSMContext
 from app.states.subscription import Step
 from app.keyboards.inline import download_check_keyboard
+from app.helpers.failure_handler import failure_handler
 
 router = Router()
 
@@ -22,7 +23,7 @@ async def send_links_for_platform(callback: CallbackQuery, state: FSMContext):
     elif platform == "platform_android":
         await callback.message.answer('Скачивай это приложение по' + ' [ссылке](https://play.google.com/store/apps/details?id=com.v2raytun.android)', parse_mode='Markdown', reply_markup=download_check_keyboard)
     else:
-        print("Платформа пользователя не определена")
+        failure_handler("Платформа пользователя не определена!")
 
     await state.set_state(Step.check_dowloand)
     await callback.answer()

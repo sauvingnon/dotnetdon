@@ -25,7 +25,7 @@ async def process_new_admin_name(message: Message, state: FSMContext):
 
     client = await xui_service.create_client(username)
 
-    if not client:
+    if client == None:
         await message.answer(f"❌ Не удалось создать пользователя '{username}'. Возможно, он уже существует или произошла ошибка.")
     else:
         await message.answer(f"✅ Пользователь '{username}' успешно создан. Вот его подписка для доступа с сервису:")

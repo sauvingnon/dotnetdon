@@ -19,14 +19,16 @@ async def get_online_clients() -> Optional[dict]:
     response.raise_for_status()
     return response.json()
 
-async def create_client(tg_username: str) -> Optional[Client]:
+async def create_client(tg_username: str, duration: int = None, trial_duration: int = None) -> Optional[Client]:
     """
     Создать нового клиента.
     """
     response = await client.post(
         f"{entity_schema}/add_client",
         json={
-            "tg_username": tg_username
+            "tg_username": tg_username,
+            "duration": duration,
+            "trial_duration": trial_duration
         }
     )
     response.raise_for_status()

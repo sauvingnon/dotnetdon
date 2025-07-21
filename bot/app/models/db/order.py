@@ -8,3 +8,4 @@ class Order(BaseModel):
     is_paid: bool
     platform: str
     user_id: int
+    duration: int

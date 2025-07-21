@@ -7,6 +7,5 @@ async def choose_platform(callback: CallbackQuery, state: FSMContext):
     # await callback.message.delete()
 
     await callback.message.answer("Выбери свое устройство:", reply_markup=platform_keyboard)
-
     await state.set_state(Step.send_links_for_platform)
     await callback.answer()  # обязательно, чтобы Telegram "заметил" обработку

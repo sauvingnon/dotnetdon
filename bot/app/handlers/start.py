@@ -6,6 +6,7 @@ from app.utils import resources
 from app.states.subscription import Step
 from app.keyboards.inline import get_main_menu
 from app.services.db import user_service
+from app.helpers.failure_handler import failure_handler
 
 router = Router()
 
@@ -29,7 +30,11 @@ async def cmd_start(message: Message, state: FSMContext):
     # await state.update_data(user_name=user_name)
 
     # Сразу создадим юзера, при первом обращении добавим его в базу
-    await user_service.create_user(message.from_user.id, user_name)
+    user = await user_service.create_user(message.from_user.id, user_name)
+    
+    if user is None: 
+        await failure_handler("Пользователь не создан!", message)
+        return
 
     # Установим текущее состояние
     await state.set_state(Step.show_menu)
@@ -37,7 +42,7 @@ async def cmd_start(message: Message, state: FSMContext):
     # Отправим сообщение с меню
     await message.answer(resources.welcome_message)
 
-    keyboard = get_main_menu(message.from_user.id)
+    keyboard = get_main_menu(user)
 
     await message.answer("Выбери пункт меню:", reply_markup=keyboard)
 
