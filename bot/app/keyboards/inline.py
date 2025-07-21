@@ -7,6 +7,7 @@ ADMIN_IDS = [ADMIN_ID, ADMIN_ID_2]
 
 # 📌 Команды, отображаемые в меню Telegram
 commands = [
+    BotCommand(command="start", description="🏠 Перезапуск"),
     BotCommand(command="menu", description="🚀 Главное меню"),
     BotCommand(command="help", description="🆘 Помощь"),
     BotCommand(command="subscribe", description="💳 Подписаться")

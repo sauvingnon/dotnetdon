@@ -72,7 +72,6 @@ class Order(Base):
     key = relationship("Key", back_populates="order")
 
 # Pydantic модель — не влияет на миграции
-# Pydantic модель — не влияет на миграции
 class ResponseData(BaseModel):
     user_name: str
     user_status: str
