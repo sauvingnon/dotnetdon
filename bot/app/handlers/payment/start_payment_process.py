@@ -15,8 +15,8 @@ async def start_payment_process(callback: CallbackQuery, state: FSMContext):
     data = await state.get_data()
 
     email = data.get("email")
-    # price = int(data.get("price"))
-    price = 10
+    price = int(data.get("price"))
+    # price = 10
     duration = int(data.get("duration"))
 
     payment_request = AddPaymentRequest(
