@@ -9,8 +9,8 @@ from app.keyboards.inline import commands
 logging.basicConfig(level=logging.INFO)
 
 dp = Dispatcher(storage=MemoryStorage())
-# bot = Bot(token=BOT_TOKEN)
-bot = Bot(token=BOT_TOKEN_TEST)
+bot = Bot(token=BOT_TOKEN)
+# bot = Bot(token=BOT_TOKEN_TEST)
 
 async def main():
     setup_routers(dp)
