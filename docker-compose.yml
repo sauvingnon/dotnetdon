@@ -64,9 +64,6 @@ services:
     restart: unless-stopped
     env_file:
       - ./bot/.env
-    # depends_on:
-    #   - db_service
-    #   - xui_service
     networks:
       - internal
     # ports:

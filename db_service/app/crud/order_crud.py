@@ -4,18 +4,18 @@ from sqlalchemy.future import select
 from sqlalchemy.exc import SQLAlchemyError
 from app.models.models import Order
 from app.core.db import AsyncSessionLocal
-from datetime import date
+from datetime import datetime
 
 # Создание заказа
-async def create_order(user_id, platform: str, order_price=None, is_paid=None) -> Order:
+async def create_order(user_id, platform: str, payment_id: str, duration: int, order_price=None, is_paid=None) -> Order:
     async with AsyncSessionLocal() as session:
         if not order_price:
-            order_price = 79
+            order_price = 0
 
         if not is_paid:
             is_paid = False
 
-        create_date = date.today()
+        create_date = datetime.now()
 
         try:
             new_order = Order(
@@ -23,7 +23,9 @@ async def create_order(user_id, platform: str, order_price=None, is_paid=None) -
                 create_date=create_date,
                 is_paid=is_paid,
                 user_id=user_id,
-                platform=platform
+                platform=platform,
+                payment_id=payment_id,
+                duration=duration
             )
             session.add(new_order)
             await session.commit()
@@ -54,10 +56,17 @@ async def get_order(order_id) -> Order:
             print(f"Ошибка: {e}")
 
 # Обновление заказа
-async def update_order(order_id, order_price: int = None, is_paid: bool = None, platform: str = None) -> Order:
-    async with AsyncSessionLocal() as session:
+async def update_order(order_id: int = None, payment_id: str = None, order_price: int = None, is_paid: bool = None, platform: str = None) -> Order:
+    async with AsyncSessionLocal() as session: 
         try:
-            result = await session.execute(select(Order).filter(Order.id == order_id))
+            if order_id:
+                result = await session.execute(select(Order).filter(Order.id == order_id))
+            elif payment_id:
+                result = await session.execute(select(Order).filter(Order.payment_id == payment_id))
+            else:
+                print(f"Ошибка: Не переданы аргументы для поиска заказа в базе данных.")
+                return
+            
             order = result.scalar()
             if order_price:
                 order.order_price = order_price
@@ -71,3 +80,13 @@ async def update_order(order_id, order_price: int = None, is_paid: bool = None, 
         except SQLAlchemyError as e:
             print(f"Ошибка: {e}")
             await session.rollback()
+
+# Получение заказа по заявке на оплату
+async def get_order_by_payment_id(payment_id: str) -> Order:
+    async with AsyncSessionLocal() as session:
+        try:
+            result = await session.execute(select(Order).filter(Order.payment_id == payment_id))
+            order = result.scalar()
+            return order
+        except SQLAlchemyError as e:
+            print(f"Ошибка: {e}")

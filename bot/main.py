@@ -12,9 +12,8 @@ dp = Dispatcher(storage=MemoryStorage())
 # bot = Bot(token=BOT_TOKEN)
 bot = Bot(token=BOT_TOKEN_TEST)
 
-setup_routers(dp)
-
 async def main():
+    setup_routers(dp)
     await bot.set_my_commands(commands)
     await dp.start_polling(bot)
 

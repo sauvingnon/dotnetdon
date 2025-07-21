@@ -32,7 +32,7 @@ async def cmd_start(message: Message, state: FSMContext):
     # Сразу создадим юзера, при первом обращении добавим его в базу
     user = await user_service.create_user(message.from_user.id, user_name)
     
-    if user == None: 
+    if user is None: 
         await failure_handler("Пользователь не создан!", message)
         return
 
@@ -42,7 +42,7 @@ async def cmd_start(message: Message, state: FSMContext):
     # Отправим сообщение с меню
     await message.answer(resources.welcome_message)
 
-    keyboard = get_main_menu(message.from_user.id)
+    keyboard = get_main_menu(user)
 
     await message.answer("Выбери пункт меню:", reply_markup=keyboard)
 

@@ -12,8 +12,6 @@ router = Router()
 async def buy_subscription(callback: CallbackQuery, state: FSMContext):
     await callback.message.delete()
 
-    await state.set_state(SubscriptionState.choosing_plan)
-
     await callback.message.answer("Выбери тарифный план:", reply_markup=plans_tariff)
 
     await callback.answer()

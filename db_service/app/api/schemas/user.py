@@ -1,5 +1,4 @@
 from pydantic import BaseModel
-from app.models.models import User
 from typing import Optional
 
 class UserCreate(BaseModel):

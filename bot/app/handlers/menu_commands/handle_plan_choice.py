@@ -2,13 +2,13 @@
 from aiogram import Router, F
 from aiogram.types import CallbackQuery
 from aiogram.fsm.context import FSMContext
-from app.states.subscription import SubscriptionState, ConfirmEmailState
+from app.states.subscription import Step, ConfirmEmailState, SubscriptionState
 from app.services.db import user_service
 from app.keyboards.inline import email_confirm_kb
 
 router = Router()
 
-@router.callback_query(lambda c: c.data.startswith("plan_"), SubscriptionState.choosing_plan)
+@router.callback_query(lambda c: c.data.startswith("plan_"), Step.show_menu)
 async def handle_plan_choice(callback: CallbackQuery, state: FSMContext):
 
     await callback.message.delete()

@@ -3,8 +3,8 @@ from aiogram import Router, F
 from app.states.subscription import Step
 from aiogram.types import CallbackQuery
 from aiogram.fsm.context import FSMContext
-from app.services.db import user_service
-from app.helpers.choose_platform import choose_platform
+from app.services.db import user_service, order_service
+from app.helpers.send_access_for_user import send_trial_access_for_user
 from app.helpers.failure_handler import failure_handler
 
 router = Router()
@@ -16,7 +16,7 @@ async def start_trial(callback: CallbackQuery, state: FSMContext):
     user = await user_service.get_user_for_tg_id(callback.from_user.id)
 
     if user == None:
-        await failure_handler("Ошибка при получении триал-доступа.", callback)
+        await failure_handler("Ошибка при получении пользователя.", callback)
         return
 
     # Если триал уже был использован, то увы, больше нет
@@ -26,11 +26,7 @@ async def start_trial(callback: CallbackQuery, state: FSMContext):
     
     # Если не был, то дадим ему триал на 3 дня
 
-    await state.update_data(user_get_trial=True)
-    
-    await state.set_state(Step.choose_platform)
-
-    await choose_platform(callback, state)
+    await send_trial_access_for_user(callback, state)
 
     await callback.answer()
 

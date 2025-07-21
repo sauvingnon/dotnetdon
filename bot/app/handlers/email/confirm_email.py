@@ -3,7 +3,7 @@ from aiogram.types import CallbackQuery, Message
 from aiogram.fsm.context import FSMContext
 from app.states.subscription import ConfirmEmailState, SubscriptionState
 from app.services.db import user_service
-from app.handlers.start_payment_process import start_payment_process
+from app.handlers.payment.start_payment_process import start_payment_process
 
 router = Router()
 
@@ -21,7 +21,7 @@ async def confirm_email(callback: CallbackQuery, state: FSMContext):
             await user_service.update_user(user_id, email)
         await callback.message.answer("Отлично, переходим к оплате!")
         # логика оплаты
-        await start_payment_process(callback.message, state)
+        await start_payment_process(callback, state)
         # await state.clear()
     else:
         await callback.message.answer("Введите новую почту:")
