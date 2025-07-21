@@ -1,7 +1,5 @@
 #!/bin/sh
 
-chmod +x entrypoint.sh
-
 echo "Запускаем миграции..."
 alembic upgrade head
 
