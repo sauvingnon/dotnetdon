@@ -72,7 +72,8 @@ def get_main_menu(user: User) -> InlineKeyboardMarkup:
         [InlineKeyboardButton(text="🧾 Мои покупки", callback_data="my_subscriptions")],
         [InlineKeyboardButton(text="⚙️ Помощь", callback_data="help")],
         [InlineKeyboardButton(text="📣 О нас", callback_data="about_us")],
-        [InlineKeyboardButton(text="👨‍💻 Техподдержка", url="https://t.me/sauvingnon")]
+        [InlineKeyboardButton(text="👨‍💻 Техподдержка", url="https://t.me/sauvingnon")],
+        [InlineKeyboardButton(text="📜 Политика сервиса", callback_data="service_rules")]
         # [InlineKeyboardButton(text="🤝 Партнерская программа", callback_data="partner_programm")]
     ]
 
