@@ -1,0 +1,99 @@
+name: Deploy to Server
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: secrets
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Debug secrets
+        run: |
+          echo "SSH user: ${{ secrets.SSH_USER }}"
+          echo "SSH IP: ${{ secrets.SSH_HOST }}"
+          if [ -z "${{ secrets.SSH_KEY }}" ]; then
+            echo "SSH Key is empty"
+          else
+            echo "SSH Key is set"
+          fi
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          echo -e "Host *\n  StrictHostKeyChecking no\n  IdentityFile ~/.ssh/id_ed25519\n" > ~/.ssh/config
+
+      - name: Create bot .env file
+        run: |
+          mkdir -p bot
+          echo "${{ secrets.BOT_ENV_FILE }}" > bot/.env
+
+      - name: Create db_service .env file
+        run: |
+          mkdir -p db_service
+          echo "${{ secrets.DB_ENV_FILE }}" > db_service/.env
+
+      - name: Create 3x_ui .env file
+        run: |
+          mkdir -p 3x_ui
+          echo "${{ secrets.PANEL_ENV_FILE }}" > 3x_ui/.env
+
+      - name: Create payment_service .env file
+        run: |
+          mkdir -p payment_service
+          echo "${{ secrets.PAYMENT_ENV_FILE }}" > payment_service/.env
+
+      - name: Clone Repo if not exists
+        run: | 
+          ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} '
+          if [ ! -d /srv/dotnetdon_project/.git ]; then
+            git clone git@github.com:sauvingnon/dotnetdon.git /srv/dotnetdon_project
+          fi
+          '
+        
+      - name: Copy .env files to server
+        run: |
+          scp -i ~/.ssh/id_ed25519 bot/.env ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/srv/dotnetdon_project/bot/.env
+          scp -i ~/.ssh/id_ed25519 db_service/.env ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/srv/dotnetdon_project/db_service/.env
+          scp -i ~/.ssh/id_ed25519 3x_ui/.env ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/srv/dotnetdon_project/3x_ui/.env
+          scp -i ~/.ssh/id_ed25519 payment_service/.env ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/srv/dotnetdon_project/payment_service/.env
+
+      - name: Deploy over SSH
+        run: | 
+          ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} '
+          cd /srv/dotnetdon_project &&
+          export PGADMIN_DEFAULT_EMAIL='${{ secrets.PGADMIN_EMAIL }}' &&
+          export PGADMIN_DEFAULT_PASSWORD='${{ secrets.PGADMIN_PASSWORD }}' &&
+          git reset --hard origin/master &&
+          git pull origin master &&
+          docker compose down &&
+          docker compose up -d --build
+          '
+        
+      - name: Проверка контейнеров
+        run: |
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} '
+            echo "🔍 Контейнеры:"
+            docker ps
+
+            echo ""
+            echo "🚨 Проверка: все сервисы running?"
+            FAIL=0
+            for c in bot db_service payment_service xui_service postgres_db pgadmin4; do
+              STATUS=$(docker inspect -f "{{.State.Status}}" ${c} || echo "missing")
+              echo "$c -> $STATUS"
+              if [ "$STATUS" != "running" ]; then
+                echo "❌ Контейнер $c не работает"
+                FAIL=1
+              fi
+            done
+            exit $FAIL
+          '
