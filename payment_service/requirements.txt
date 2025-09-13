@@ -1,5 +1,0 @@
-python-dotenv
-fastapi
-uvicorn[standard]
-debugpy
-yookassa

@@ -1,0 +1,11 @@
+fastapi
+uvicorn[standard]
+SQLAlchemy
+asyncpg
+python-dotenv
+python-dateutil
+pydantic
+pydantic-settings
+debugpy
+alembic
+sentry-sdk[fastapi]

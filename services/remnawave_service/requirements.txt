@@ -1,0 +1,8 @@
+python-dotenv
+fastapi
+uvicorn[standard]
+remnawave
+debugpy
+python-dateutil
+asyncio
+sentry-sdk[fastapi]
