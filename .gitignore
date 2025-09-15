@@ -1,0 +1,5 @@
+﻿*.md
+*.env
+**/__pycache__/
+**/logs/
+services/.vscode
