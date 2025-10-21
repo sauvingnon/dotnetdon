@@ -4,6 +4,7 @@ from app.services.remnawave.client import client
 from typing import Optional
 from app.schemas.pyndantic import to_pydantic_model
 from app.schemas.remnawave.user import UserResponseDto
+from app.schemas.remnawave.addreq import ClientCreate
 
 entity_schema = "remnawave"
 
@@ -19,17 +20,13 @@ async def get_online_clients() -> Optional[dict]:
     response.raise_for_status()
     return response.json()
 
-async def create_client(tg_username: str, duration: int = None, trial_duration: int = None) -> Optional[UserResponseDto]:
+async def create_client(req: ClientCreate) -> Optional[UserResponseDto]:
     """
     Создать нового клиента.
     """
     response = await client.post(
         f"{entity_schema}/add_client",
-        json={
-            "tg_username": tg_username,
-            "duration": duration,
-            "trial_duration": trial_duration
-        }
+        json=req.dict()
     )
     response.raise_for_status()
     client_data = response.json()

@@ -1,11 +1,10 @@
 import asyncio
 from aiogram import Bot, Dispatcher, types
-from config import BOT_TOKEN, BOT_TOKEN_TEST
+from config import BOT_TOKEN
 from app.dispatcher_module import setup_routers
 from aiogram.fsm.storage.memory import MemoryStorage
 from app.keyboards.inline import commands
 from logger import logger
-from app.helpers.notification_task import notification_loop
 import sentry_sdk
 from sentry_sdk.integrations.logging import LoggingIntegration
 from sentry_sdk.integrations.asyncio import AsyncioIntegration
@@ -27,14 +26,13 @@ sentry_sdk.init(
 
 dp = Dispatcher(storage=MemoryStorage())
 bot = Bot(token=BOT_TOKEN)
-# bot = Bot(token=BOT_TOKEN_TEST)
 
 async def main():
     logger.info("Бот запущен.")
     setup_routers(dp)
     dp.errors.handlers.append(errors_handler)
     await bot.set_my_commands(commands)
-    asyncio.create_task(notification_loop(bot))
+    # asyncio.create_task(notification_loop(bot))
     await dp.start_polling(bot)
 
 async def errors_handler(update: types.Update, exception: Exception):

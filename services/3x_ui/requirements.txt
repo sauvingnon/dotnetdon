@@ -1,6 +1,0 @@
-python-dotenv
-fastapi
-uvicorn[standard]
-py3xui
-debugpy
-python-dateutil

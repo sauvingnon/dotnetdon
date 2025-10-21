@@ -7,6 +7,8 @@ from app.keyboards.inline import empty_keyboard
 from logger import logger
 from app.helpers.failure_handler import failure_handler
 import traceback
+from config import TRIAL_DURATION_MONTHS
+from app.schemas.remnawave.addreq import ClientCreate
 
 router = Router()
 
@@ -28,7 +30,15 @@ async def process_new_admin_name(message: Message, state: FSMContext):
     username = message.text.strip()
 
     try:
-        client = await remnawave_service.create_client(username)
+
+        request = ClientCreate(
+            tg_id=None,
+            tg_username=username,
+            duration=TRIAL_DURATION_MONTHS,
+            description=f"Создано админом {message.from_user.username}"
+        )
+
+        response = await remnawave_service.create_client(request)
     except Exception as e:
         await message.answer(
             f"❌ Не удалось создать пользователя '{username}'. Попробуй снова или свяжись с техподдержкой."
@@ -38,7 +48,7 @@ async def process_new_admin_name(message: Message, state: FSMContext):
         )
         return
 
-    if not client:
+    if not response:
         await message.answer(
             f"❌ Не удалось создать пользователя '{username}'. Возможно, он уже существует. Введи другое имя:"
         )
@@ -48,7 +58,7 @@ async def process_new_admin_name(message: Message, state: FSMContext):
     # Успешно создали пользователя
     await state.set_state(SubscriptionState.show_menu)
     await message.answer(f"✅ Пользователь '{username}' успешно создан. Вот его подписка для доступа к сервису:")
-    await message.answer(f"<code>{client.subscription_url}</code>", parse_mode="HTML")
+    await message.answer(f"<code>{response.subscription_url}</code>", parse_mode="HTML")
     await message.answer("Выбери пункт меню:", reply_markup=empty_keyboard)
 
     logger.info(f"Администратор {message.from_user.id} - {message.from_user.username} успешно создал пользователя '{username}'")

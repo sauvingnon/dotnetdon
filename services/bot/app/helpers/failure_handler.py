@@ -19,7 +19,8 @@ async def failure_handler(update: Message | CallbackQuery):
         try:
             await update.bot.send_message(
                 chat_id=chat_id,
-                text='Что-то пошло не так, напиши в [поддержку](https://t.me/sauvingnon)',
+                # text='Что-то пошло не так, напиши в [поддержку](https://t.me/sauvingnon)',
+                text='Что-то пошло не так... Попробуй позже!)',
                 parse_mode='Markdown',
                 disable_web_page_preview=True
             )

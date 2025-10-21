@@ -8,7 +8,7 @@ from aiogram.fsm.context import FSMContext
 router = Router()
 
 @router.callback_query(F.data == "admin_panel", SubscriptionState.show_menu)
-async def about_us(callback: CallbackQuery, state: FSMContext):
+async def admin_panel_func(callback: CallbackQuery, state: FSMContext):
     # Отправим сообщение с меню
     await callback.message.delete()
     await callback.message.answer("Выбери пункт меню:", reply_markup=admin_panel)

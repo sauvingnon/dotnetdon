@@ -1,7 +1,7 @@
 import datetime
 from fastapi import APIRouter
 from app.services import remnawave_service
-from app.api.schemas.client import ClientCreate, TrialRequest, ClientUpdate
+from app.api.schemas.client import ClientCreate
 
 router = APIRouter(
     prefix="/remnawave",
@@ -10,7 +10,12 @@ router = APIRouter(
 
 @router.post("/add_client")
 async def add_client(client: ClientCreate):
-    return await remnawave_service.add_new_client(client.tg_username, client.duration, client.trial_duration)
+    return await remnawave_service.add_new_client(
+        tg_username=client.tg_username,
+        tg_id=client.tg_id,
+        description=client.description,
+        duration=client.duration
+    )
 
 # @router.patch("/update_client")
 # async def update_client(client: ClientUpdate):

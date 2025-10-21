@@ -7,7 +7,6 @@ from aiogram.fsm.context import FSMContext
 
 router = Router()
 
-# @router.message(F.text == "/help")
 @router.callback_query(F.data == "help", SubscriptionState.show_menu)
 async def help(callback: CallbackQuery, state: FSMContext):
     # Отправим сообщение с меню

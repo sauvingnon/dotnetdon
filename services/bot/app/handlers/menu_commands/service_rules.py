@@ -9,7 +9,7 @@ from aiogram.fsm.context import FSMContext
 router = Router()
 
 @router.callback_query(F.data == "service_rules", SubscriptionState.show_menu)
-async def about_us(callback: CallbackQuery, state: FSMContext):
+async def service_rules(callback: CallbackQuery, state: FSMContext):
     # Отправим сообщение с меню
     await callback.message.delete()
     await callback.message.answer(service_rules_message, reply_markup=empty_keyboard)
